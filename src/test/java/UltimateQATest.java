@@ -1,22 +1,47 @@
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.w3c.dom.html.HTMLInputElement;
 
-public class UltimateQATest {
+import java.util.List;
 
-    String projectLocation = System.getProperty("user.dir");
-    WebDriver driver;
+public class UltimateQATest extends BaseTestSetup {
 
-    //hermetyzacja public/privatee/protectet
     @Test
     public void testOne () {
-        System.out.println(projectLocation);
-        System.setProperty("webdriver.chrome.driver", projectLocation + "/resources/chromedriver.exe");
+        //sposoby wyszukiwania elementów id, className, css Selector, xpath
+        WebElement buttonUsingId = driver.findElement(By.id("idExample"));
+        Assertions.assertTrue(buttonUsingId.isDisplayed());
+        buttonUsingId.click();
 
-        driver = new ChromeDriver();
+        WebElement textButtonSuccess = driver.findElement(By.className("entry-title"));
+        Assertions.assertEquals("Button success", textButtonSuccess.getText());
+     }
+    //input[@id='et_pb_contact_name_0']   1 out of 1
+    //input[@class='input et_contact_error']   1 out of 2
+    //input[@class='input et_contact_error' and @id='et_pb_contact_name_0']
+    //input[@placeholder='Name']
+    //*[@placeholder='Name']
+    //*[] - ogolna postac XPath
+     @Test
+    public void testTwo() throws InterruptedException {
+        WebElement inputName = driver.findElement(By.xpath("//input[@id='et_pb_contact_name_0']"));
+        inputName.sendKeys("Tester");
 
-        driver.get("https://ultimateqa.com/simple-html-elements-for-automation/");
+        WebElement inputEmail = driver.findElement(By.xpath("//input[@id='et_pb_contact_email_0']"));
+        inputEmail.sendKeys("aga@wp.pl");
 
- //       driver.close();
+        Thread.sleep(5000);
+
+         WebElement buttonEmailMe = driver.findElement(By.xpath("//*[text()=\"Email Me!\"]"));
+         Assertions.assertTrue(buttonEmailMe.isDisplayed());
+         buttonEmailMe.click();
+
+
+         Thread.sleep(2000);
+
+         WebElement textThanks = driver.findElement(By.xpath("//*[@id='et_pb_contact_form_0']//p"));
+         Assertions.assertEquals("Thanks for contacting us", textThanks.getText());
     }
 }
